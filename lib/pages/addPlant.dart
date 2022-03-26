@@ -40,12 +40,15 @@ class _AddPlantState extends State<AddPlant> {
       decoration: const BoxDecoration(color: Colors.green),
       child: Scaffold(
         appBar: appBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              header(size, context),
-              formfield(context),
-            ],
+        body: Form(
+          key: _addFormKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                header(size, context),
+                formfield(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -62,10 +65,15 @@ class _AddPlantState extends State<AddPlant> {
             Container(
               margin: const EdgeInsets.only(left: 35, right: 35),
               child: Column(
-                key: _addFormKey,
                 children: [
                   TextFormField(
                     controller: _plantname,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -83,6 +91,12 @@ class _AddPlantState extends State<AddPlant> {
                   ),
                   TextFormField(
                     controller: _plantpros,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       label: const Text(
                         'ลักษณะเด่นของต้นไม้',
@@ -98,6 +112,12 @@ class _AddPlantState extends State<AddPlant> {
                   ),
                   TextFormField(
                     controller: _plantuse,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -115,6 +135,12 @@ class _AddPlantState extends State<AddPlant> {
                   ),
                   TextFormField(
                     controller: _planttype,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(

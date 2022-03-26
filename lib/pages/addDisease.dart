@@ -42,12 +42,15 @@ class _AddDiseaseState extends State<AddDisease> {
       decoration: const BoxDecoration(color: Colors.green),
       child: Scaffold(
         appBar: appBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              header(size, context),
-              formfield(context),
-            ],
+        body: Form(
+          key: _addFormKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                header(size, context),
+                formfield(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -64,7 +67,6 @@ class _AddDiseaseState extends State<AddDisease> {
             Container(
               margin: const EdgeInsets.only(left: 35, right: 35),
               child: Column(
-                key: _addFormKey,
                 children: [
                   TextFormField(
                     controller: _disname,

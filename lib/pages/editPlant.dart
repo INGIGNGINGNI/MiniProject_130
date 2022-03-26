@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mpj_disease_plant/pages/showAllData.dart';
 
 class EditPlant extends StatefulWidget {
@@ -24,19 +23,6 @@ class _EditPlantState extends State<EditPlant> {
     super.initState();
     getFirebaseData(widget.id!);
   }
-
-  // CollectionReference plants = FirebaseFirestore.instance.collection('Plants');
-  // Future<void> updatePlant() {
-  //   return plants.doc(widget.id).update({
-  //     'plant_name': _plantname.text,
-  //     'plant_pros': _plantpros.text,
-  //     'plant_use': _plantuse.text,
-  //     'plant_type': _planttype.text,
-  //   }).then((value) {
-  //     print("Data updated successfully");
-  //     Navigator.pop(context);
-  //   }).catchError((error) => print("Failed to update user: $error"));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +59,12 @@ class _EditPlantState extends State<EditPlant> {
                 children: [
                   TextFormField(
                     controller: _plantname,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -90,6 +82,12 @@ class _EditPlantState extends State<EditPlant> {
                   ),
                   TextFormField(
                     controller: _plantpros,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       label: const Text(
                         'ลักษณะเด่นของต้นไม้',
@@ -105,6 +103,12 @@ class _EditPlantState extends State<EditPlant> {
                   ),
                   TextFormField(
                     controller: _plantuse,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -122,6 +126,12 @@ class _EditPlantState extends State<EditPlant> {
                   ),
                   TextFormField(
                     controller: _planttype,
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณาป้อนข้อมูล';
+                      }
+                      return null;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -167,7 +177,7 @@ class _EditPlantState extends State<EditPlant> {
                                 Navigator.pop(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ShowAllData(),
+                                      builder: (context) => const ShowAllData(),
                                     ));
                               }).catchError((error) =>
                                   print("Failed to Update Item: $error"));

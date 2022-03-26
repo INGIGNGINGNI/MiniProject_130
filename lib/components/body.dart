@@ -42,9 +42,9 @@ class _BodyState extends State<Body> {
 
   Padding titlePlant() {
     return const Padding(
-      padding: EdgeInsets.only(right: 250, bottom: 10),
+      padding: EdgeInsets.only(right: 220, bottom: 10),
       child: Text(
-        'ต้นไม้ที่นิยม',
+        'ต้นไม้ยอดนิยม',
         style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,

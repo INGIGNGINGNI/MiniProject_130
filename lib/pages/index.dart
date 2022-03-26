@@ -54,7 +54,7 @@ class _IndexState extends State<Index> {
           child: const Text(
             'เริ่มต้นใช้งาน',
             style: TextStyle(
-                color: Color.fromARGB(255, 85, 134, 89),
+                color: Color.fromARGB(255, 76, 105, 78),
                 fontSize: 22,
                 fontWeight: FontWeight.bold),
           ),
@@ -64,8 +64,8 @@ class _IndexState extends State<Index> {
                 borderRadius: BorderRadius.circular(32.0),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
-            foregroundColor: MaterialStateProperty.all(Colors.brown),
+            backgroundColor:
+                MaterialStateProperty.all(Color.fromARGB(255, 218, 240, 183)),
           ),
         ),
       ),
