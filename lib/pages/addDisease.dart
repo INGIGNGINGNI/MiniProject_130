@@ -13,23 +13,19 @@ class AddDisease extends StatefulWidget {
 class _AddDiseaseState extends State<AddDisease> {
   final _addFormKey = GlobalKey<FormState>();
 
-  TextEditingController dis_name = TextEditingController();
-  TextEditingController dis_symptom = TextEditingController();
-  TextEditingController dis_treat = TextEditingController();
-  TextEditingController dis_type = TextEditingController();
-
-  List<ListDisType> dropdownItems = ListDisType.getListDisType();
-  late List<DropdownMenuItem<ListDisType>> dropdownMenuItems;
-  late ListDisType _selectedType;
+  final TextEditingController _disname = TextEditingController();
+  final TextEditingController _dissymptom = TextEditingController();
+  final TextEditingController _distreat = TextEditingController();
+  final TextEditingController _distype = TextEditingController();
 
   CollectionReference diseases =
       FirebaseFirestore.instance.collection('Diseases');
   Future<void> AddDiseases() {
     return diseases.add({
-      'dis_name': dis_name.text,
-      'dis_symptom': dis_symptom.text,
-      'dis_treat': dis_treat.text,
-      'dis_type': _selectedType.value,
+      'dis_name': _disname.text,
+      'dis_symptom': _dissymptom.text,
+      'dis_treat': _distreat.text,
+      'dis_type': _distype.text,
     }).then((value) {
       print("Product data has been successfully");
       var route = MaterialPageRoute(
@@ -37,26 +33,6 @@ class _AddDiseaseState extends State<AddDisease> {
       );
       Navigator.push(context, route);
     }).catchError((error) => print("Failed to add data: $error"));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    dropdownMenuItems = createDropdownMenu(dropdownItems);
-    _selectedType = dropdownMenuItems[0].value!;
-  }
-
-  List<DropdownMenuItem<ListDisType>> createDropdownMenu(
-      List<ListDisType> dropdownItems) {
-    List<DropdownMenuItem<ListDisType>> items = [];
-
-    for (var item in dropdownItems) {
-      items.add(DropdownMenuItem(
-        child: Text(item.name!),
-        value: item,
-      ));
-    }
-    return items;
   }
 
   @override
@@ -91,7 +67,7 @@ class _AddDiseaseState extends State<AddDisease> {
                 key: _addFormKey,
                 children: [
                   TextFormField(
-                    controller: dis_name,
+                    controller: _disname,
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -108,7 +84,7 @@ class _AddDiseaseState extends State<AddDisease> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: dis_symptom,
+                    controller: _dissymptom,
                     decoration: InputDecoration(
                       label: const Text(
                         'อาการของโรค',
@@ -123,7 +99,7 @@ class _AddDiseaseState extends State<AddDisease> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: dis_treat,
+                    controller: _distreat,
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       label: const Text(
@@ -139,30 +115,18 @@ class _AddDiseaseState extends State<AddDisease> {
                   const SizedBox(
                     height: 30,
                   ),
-                  Container(
-                    child: DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        label: Text(
-                          'บริเวณที่เกิด',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                        ),
+                  TextFormField(
+                    controller: _distype,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      label: const Text(
+                        'บริเวณที่เกิด',
+                        style: TextStyle(fontSize: 20),
                       ),
-                      value: _selectedType,
-                      items: dropdownMenuItems,
-                      isExpanded: true,
-                      iconSize: 20,
-                      iconEnabledColor:
-                          const Color.fromARGB(255, 107, 196, 113),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedType = value as ListDisType;
-                        });
-                      },
+                      // prefixIcon: const Icon(Icons.nature_sharp),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
                   ),
                   const SizedBox(
