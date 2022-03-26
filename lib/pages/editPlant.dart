@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mpj_disease_plant/pages/showAllData.dart';
 
 class EditPlant extends StatefulWidget {
   const EditPlant({Key? key, this.id}) : super(key: key);
@@ -10,24 +12,31 @@ class EditPlant extends StatefulWidget {
 }
 
 class _EditPlantState extends State<EditPlant> {
-  final _editFormKey = GlobalKey<FormState>();
+  CollectionReference plants = FirebaseFirestore.instance.collection("Plants");
+  final GlobalKey<FormState> _editFormKey = GlobalKey<FormState>();
   final TextEditingController _plantname = TextEditingController();
   final TextEditingController _plantpros = TextEditingController();
   final TextEditingController _plantuse = TextEditingController();
   final TextEditingController _planttype = TextEditingController();
 
-  CollectionReference plants = FirebaseFirestore.instance.collection('Plants');
-  Future<void> updatePlant() {
-    return plants.doc(widget.id).update({
-      'plant_name': _plantname.text,
-      'plant_pros': _plantpros.text,
-      'plant_use': _plantuse.text,
-      'plant_type': _planttype.text,
-    }).then((value) {
-      print("Data updated successfully");
-      Navigator.pop(context);
-    }).catchError((error) => print("Failed to update user: $error"));
+  @override
+  void initState() {
+    super.initState();
+    getFirebaseData(widget.id!);
   }
+
+  // CollectionReference plants = FirebaseFirestore.instance.collection('Plants');
+  // Future<void> updatePlant() {
+  //   return plants.doc(widget.id).update({
+  //     'plant_name': _plantname.text,
+  //     'plant_pros': _plantpros.text,
+  //     'plant_use': _plantuse.text,
+  //     'plant_type': _planttype.text,
+  //   }).then((value) {
+  //     print("Data updated successfully");
+  //     Navigator.pop(context);
+  //   }).catchError((error) => print("Failed to update user: $error"));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,131 +61,134 @@ class _EditPlantState extends State<EditPlant> {
   }
 
   Widget editformfield(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: plants.doc(widget.id).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-
-          _plantname.text = data['plant_name'];
-          _plantpros.text = data['plant_pros'];
-          _plantuse.text = data['plant_use'];
-          _planttype.text = data['plant_type'];
-
-          return SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.only(top: 50),
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(top: 50),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 35, right: 35),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 35, right: 35),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _plantname,
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            label: const Text(
-                              'ชื่อของต้นไม้',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            // prefixIcon: const Icon(Icons.nature_sharp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextFormField(
-                          controller: _plantpros,
-                          decoration: InputDecoration(
-                            label: const Text(
-                              'ลักษณะเด่นของต้นไม้',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextFormField(
-                          controller: _plantuse,
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            label: const Text(
-                              'ประโยชน์ของต้นไม้',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            // prefixIcon: const Icon(Icons.nature_sharp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextFormField(
-                          controller: _planttype,
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            label: const Text(
-                              'ประเภทของต้นไม้',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            // prefixIcon: const Icon(Icons.nature_sharp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'บันทึกการแก้ไขข้อมูล',
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.w700,
-                                color: Color.fromARGB(255, 107, 196, 113),
-                              ),
-                            ),
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor:
-                                  const Color.fromARGB(255, 107, 196, 113),
-                              child: IconButton(
-                                  color: Colors.white,
-                                  onPressed: updatePlant,
-                                  icon: const Icon(
-                                    Icons.arrow_forward,
-                                  )),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                      ],
+                  TextFormField(
+                    controller: _plantname,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      label: const Text(
+                        'ชื่อของต้นไม้',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      // prefixIcon: const Icon(Icons.nature_sharp),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  TextFormField(
+                    controller: _plantpros,
+                    decoration: InputDecoration(
+                      label: const Text(
+                        'ลักษณะเด่นของต้นไม้',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  TextFormField(
+                    controller: _plantuse,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      label: const Text(
+                        'ประโยชน์ของต้นไม้',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      // prefixIcon: const Icon(Icons.nature_sharp),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  TextFormField(
+                    controller: _planttype,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      label: const Text(
+                        'ประเภทของต้นไม้',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      // prefixIcon: const Icon(Icons.nature_sharp),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'บันทึกการแก้ไขข้อมูล',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                          color: Color.fromARGB(255, 107, 196, 113),
+                        ),
+                      ),
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor:
+                            const Color.fromARGB(255, 107, 196, 113),
+                        child: IconButton(
+                          color: Colors.white,
+                          onPressed: () {
+                            if (_editFormKey.currentState!.validate()) {
+                              plants.doc(widget.id).update({
+                                'plant_name': _plantname.text,
+                                'plant_pros': _plantpros.text,
+                                'plant_use': _plantuse.text,
+                                'plant_type': _planttype.text,
+                              }).then((value) {
+                                print("Data Update Successedfully");
+
+                                Navigator.pop(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ShowAllData(),
+                                    ));
+                              }).catchError((error) =>
+                                  print("Failed to Update Item: $error"));
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.arrow_forward,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
                 ],
               ),
-            ),
-          );
-        }
-        return const Text('Loading');
-      },
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -212,5 +224,16 @@ class _EditPlantState extends State<EditPlant> {
         ],
       ),
     );
+  }
+
+  getFirebaseData(String id) {
+    FirebaseFirestore.instance.collection("Plants").doc(id).get().then((value) {
+      setState(() {
+        _plantname.text = value.data()?['plant_name'];
+        _plantpros.text = value.data()?['plant_pros'];
+        _plantuse.text = value.data()?['plant_use'];
+        _planttype.text = value.data()?['plant_type'];
+      });
+    });
   }
 }
